@@ -17,3 +17,23 @@ Accept: application/json
 }
 
 ###
+
+PUT {{InventoryManagement.Api_HostAddress}}/api/products/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Gaming Keyboard",
+  "description": "RGB mechanical keyboard",
+  "price": 99.99,
+  "quantity": 10
+}
+
+###
+
+DELETE {{InventoryManagement.Api_HostAddress}}/api/products/2
+
+###
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products/2
+Accept: application/json
