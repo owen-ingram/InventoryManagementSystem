@@ -31,9 +31,25 @@ Content-Type: application/json
 
 ###
 
-DELETE {{InventoryManagement.Api_HostAddress}}/api/products/2
+DELETE {{InventoryManagement.Api_HostAddress}}/api/products/6
 
 ###
 
 GET {{InventoryManagement.Api_HostAddress}}/api/products/2
 Accept: application/json
+
+###
+
+POST {{InventoryManagement.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "Invalid product",
+  "price": -50,
+  "quantity": -10
+}
+
+###
+
+DELETE {{InventoryManagement.Api_HostAddress}}/api/products/7
