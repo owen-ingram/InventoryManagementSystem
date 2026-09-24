@@ -91,4 +91,35 @@ public class ProductsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPatch("{id}/stock")]
+    public async Task<IActionResult> AdjustStock(
+    int id,
+    StockAdjustmentRequest request)
+    {
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        long newQuantity = (long)product.Quantity + request.Change;
+
+        if (newQuantity < 0)
+        {
+            return BadRequest("Insufficient stock.");
+        }
+
+        if (newQuantity > int.MaxValue)
+        {
+            return BadRequest("Stock quantity exceeds the maximum allowed.");
+        }
+
+        product.Quantity = (int)newQuantity;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(product);
+    }
 }

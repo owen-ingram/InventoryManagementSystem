@@ -1,13 +1,21 @@
 @InventoryManagement.Api_HostAddress = http://localhost:5161
 
+### Get all products
+
 GET {{InventoryManagement.Api_HostAddress}}/api/products
 Accept: application/json
 
-###
+
+### Get product by ID
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products/2
+Accept: application/json
+
+
+### Create product
 
 POST {{InventoryManagement.Api_HostAddress}}/api/products
 Content-Type: application/json
-Accept: application/json
 
 {
   "name": "Keyboard",
@@ -16,7 +24,8 @@ Accept: application/json
   "quantity": 15
 }
 
-###
+
+### Update product
 
 PUT {{InventoryManagement.Api_HostAddress}}/api/products/2
 Content-Type: application/json
@@ -29,16 +38,38 @@ Content-Type: application/json
   "quantity": 10
 }
 
-###
 
-DELETE {{InventoryManagement.Api_HostAddress}}/api/products/6
+### Add inventory
 
-###
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/2/stock
+Content-Type: application/json
 
-GET {{InventoryManagement.Api_HostAddress}}/api/products/2
-Accept: application/json
+{
+  "change": 10
+}
 
-###
+
+### Remove inventory
+
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/2/stock
+Content-Type: application/json
+
+{
+  "change": -3
+}
+
+
+### Test insufficient inventory
+
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/2/stock
+Content-Type: application/json
+
+{
+  "change": -1000
+}
+
+
+### Test product validation
 
 POST {{InventoryManagement.Api_HostAddress}}/api/products
 Content-Type: application/json
@@ -50,6 +81,7 @@ Content-Type: application/json
   "quantity": -10
 }
 
-###
 
-DELETE {{InventoryManagement.Api_HostAddress}}/api/products/7
+### Delete product
+
+DELETE {{InventoryManagement.Api_HostAddress}}/api/products/2
