@@ -2,6 +2,7 @@
 using InventoryManagement.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using InventoryManagement.Api.Services;
 
 namespace InventoryManagement.Api.Controllers;
 
@@ -104,19 +105,16 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
 
-        long newQuantity = (long)product.Quantity + request.Change;
+        int? newQuantity = StockCalculator.Calculate(
+            product.Quantity,
+            request.Change);
 
-        if (newQuantity < 0)
+        if (newQuantity == null)
         {
-            return BadRequest("Insufficient stock.");
+            return BadRequest("Invalid stock adjustment.");
         }
 
-        if (newQuantity > int.MaxValue)
-        {
-            return BadRequest("Stock quantity exceeds the maximum allowed.");
-        }
-
-        product.Quantity = (int)newQuantity;
+        product.Quantity = newQuantity.Value;
 
         await _context.SaveChangesAsync();
 
