@@ -18,9 +18,31 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? search)
     {
-        var products = await _context.Products.ToListAsync();
+        var query = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(p => p.Name.Contains(search));
+        }
+
+        var products = await query.ToListAsync();
+
+        return Ok(products);
+    }
+
+    [HttpGet("low-stock")]
+    public async Task<ActionResult<IEnumerable<Product>>> GetLowStockProducts(int threshold = 5)
+    {
+        if (threshold < 0)
+        {
+            return BadRequest("Threshold cannot be negative.");
+        }
+
+        var products = await _context.Products
+            .Where(p => p.Quantity <= threshold)
+            .ToListAsync();
 
         return Ok(products);
     }
@@ -39,8 +61,16 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProduct(ProductRequest request)
     {
+        var product = new Product
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            Quantity = request.Quantity
+        };
+
         _context.Products.Add(product);
 
         await _context.SaveChangesAsync();
@@ -52,13 +82,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, Product updatedProduct)
+    public async Task<IActionResult> UpdateProduct(
+    int id,
+    ProductRequest request)
     {
-        if (id != updatedProduct.Id)
-        {
-            return BadRequest();
-        }
-
         var product = await _context.Products.FindAsync(id);
 
         if (product == null)
@@ -66,10 +93,10 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
 
-        product.Name = updatedProduct.Name;
-        product.Description = updatedProduct.Description;
-        product.Price = updatedProduct.Price;
-        product.Quantity = updatedProduct.Quantity;
+        product.Name = request.Name;
+        product.Description = request.Description;
+        product.Price = request.Price;
+        product.Quantity = request.Quantity;
 
         await _context.SaveChangesAsync();
 

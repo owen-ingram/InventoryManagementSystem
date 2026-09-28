@@ -5,6 +5,11 @@
 GET {{InventoryManagement.Api_HostAddress}}/api/products
 Accept: application/json
 
+### Search products by name
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products?search=Keyboard
+Accept: application/json
+
 
 ### Get product by ID
 
@@ -24,6 +29,18 @@ Content-Type: application/json
   "quantity": 15
 }
 
+### Create product
+
+POST {{InventoryManagement.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Mouse",
+  "description": "Wireless mouse",
+  "price": 39.99,
+  "quantity": 12
+}
+
 
 ### Update product
 
@@ -37,6 +54,23 @@ Content-Type: application/json
   "price": 99.99,
   "quantity": 10
 }
+
+### Update product
+
+PUT {{InventoryManagement.Api_HostAddress}}/api/products/11
+Content-Type: application/json
+
+{
+  "name": "Gaming Mouse",
+  "description": "Wireless gaming mouse",
+  "price": 49.99,
+  "quantity": 8
+}
+
+### Get low stock products
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products/low-stock?threshold=-1
+Accept: application/json
 
 
 ### Add inventory

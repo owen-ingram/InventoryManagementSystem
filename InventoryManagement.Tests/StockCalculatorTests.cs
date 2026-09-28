@@ -37,4 +37,15 @@ public class StockCalculatorTests
 
         Assert.Null(result);
     }
+
+    [Fact]
+    public void Calculate_ReturnsNull_WhenStockWouldOverflow()
+    {
+        int currentQuantity = int.MaxValue;
+        int change = 1;
+
+        int? result = StockCalculator.Calculate(currentQuantity, change);
+
+        Assert.Null(result);
+    }
 }
