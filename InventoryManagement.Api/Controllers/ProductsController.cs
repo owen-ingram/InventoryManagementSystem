@@ -18,7 +18,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? search)
+    public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
+        string? search,
+        string? sortBy)
     {
         var query = _context.Products.AsQueryable();
 
@@ -26,6 +28,14 @@ public class ProductsController : ControllerBase
         {
             query = query.Where(p => p.Name.Contains(search));
         }
+
+        query = sortBy?.ToLower() switch
+        {
+            "name" => query.OrderBy(p => p.Name),
+            "price" => query.OrderBy(p => p.Price),
+            "quantity" => query.OrderBy(p => p.Quantity),
+            _ => query
+        };
 
         var products = await query.ToListAsync();
 

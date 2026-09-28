@@ -5,19 +5,44 @@
 GET {{InventoryManagement.Api_HostAddress}}/api/products
 Accept: application/json
 
+
+### Get product by ID
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}
+Accept: application/json
+
+
 ### Search products by name
 
 GET {{InventoryManagement.Api_HostAddress}}/api/products?search=Keyboard
 Accept: application/json
 
 
-### Get product by ID
+### Sort products by name
 
-GET {{InventoryManagement.Api_HostAddress}}/api/products/10
+GET {{InventoryManagement.Api_HostAddress}}/api/products?sortBy=name
 Accept: application/json
 
 
-### Create product
+### Sort products by price
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products?sortBy=price
+Accept: application/json
+
+
+### Sort products by quantity
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products?sortBy=quantity
+Accept: application/json
+
+
+### Get low stock products
+
+GET {{InventoryManagement.Api_HostAddress}}/api/products/low-stock?threshold=25
+Accept: application/json
+
+
+### Create keyboard
 
 POST {{InventoryManagement.Api_HostAddress}}/api/products
 Content-Type: application/json
@@ -29,7 +54,8 @@ Content-Type: application/json
   "quantity": 15
 }
 
-### Create product
+
+### Create mouse
 
 POST {{InventoryManagement.Api_HostAddress}}/api/products
 Content-Type: application/json
@@ -42,22 +68,22 @@ Content-Type: application/json
 }
 
 
-### Update product
+### Update keyboard
 
-PUT {{InventoryManagement.Api_HostAddress}}/api/products/10
+PUT {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}
 Content-Type: application/json
 
 {
-  "id": 10,
   "name": "Gaming Keyboard",
   "description": "RGB mechanical keyboard",
   "price": 99.99,
   "quantity": 10
 }
 
-### Update product
 
-PUT {{InventoryManagement.Api_HostAddress}}/api/products/11
+### Update mouse
+
+PUT {{InventoryManagement.Api_HostAddress}}/api/products/{{mouseId}}
 Content-Type: application/json
 
 {
@@ -67,15 +93,10 @@ Content-Type: application/json
   "quantity": 8
 }
 
-### Get low stock products
-
-GET {{InventoryManagement.Api_HostAddress}}/api/products/low-stock?threshold=-1
-Accept: application/json
-
 
 ### Add inventory
 
-PATCH {{InventoryManagement.Api_HostAddress}}/api/products/10/stock
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}/stock
 Content-Type: application/json
 
 {
@@ -85,7 +106,7 @@ Content-Type: application/json
 
 ### Remove inventory
 
-PATCH {{InventoryManagement.Api_HostAddress}}/api/products/10/stock
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}/stock
 Content-Type: application/json
 
 {
@@ -93,9 +114,14 @@ Content-Type: application/json
 }
 
 
+### Delete product
+
+DELETE {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}
+
+
 ### Test insufficient inventory
 
-PATCH {{InventoryManagement.Api_HostAddress}}/api/products/10/stock
+PATCH {{InventoryManagement.Api_HostAddress}}/api/products/{{keyboardId}}/stock
 Content-Type: application/json
 
 {
@@ -116,6 +142,7 @@ Content-Type: application/json
 }
 
 
-### Delete product
+### Test invalid low stock threshold
 
-DELETE {{InventoryManagement.Api_HostAddress}}/api/products/10
+GET {{InventoryManagement.Api_HostAddress}}/api/products/low-stock?threshold=-1
+Accept: application/json
